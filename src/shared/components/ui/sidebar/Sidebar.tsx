@@ -2,8 +2,9 @@
 
 import { Home, Inbox, RefreshCw, LogOut } from "lucide-react";
 import "./sidebar.css";
+import { UserRole } from "@/modules/users/shared/user/types";
 
-export default function Sidebar() {
+export default function Sidebar({ userRole }: { userRole: UserRole }) {
     const navItems = [
         { label: "Home", href: "/home", icon: Home },
         { label: "History", href: "/history", icon: Inbox },
@@ -13,7 +14,7 @@ export default function Sidebar() {
     return (
         <aside className="sidebar">
             <div className="sidebar-header">
-                <h1 className="header-title">Admin</h1>
+                <h1 className="header-title">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</h1>
             </div>
 
             <nav className="sidebar-nav">
