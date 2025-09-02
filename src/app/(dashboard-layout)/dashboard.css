@@ -16,4 +16,24 @@
     padding: 2rem;
     overflow-y: auto;
     background: var(--background);
+    margin-left: 225px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+
+    .dashboard-content {
+        padding: 1rem;
+        padding-top: 5rem;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 0.5rem;
+        padding-top: 5rem;
+    }
 }

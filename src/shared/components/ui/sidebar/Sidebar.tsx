@@ -1,11 +1,12 @@
 "use client";
 
-import { Home, Inbox, RefreshCw, LogOut } from "lucide-react";
+import { Home, Inbox, RefreshCw, LogOut, Menu, X } from "lucide-react";
 import "./sidebar.css";
 import { UserRole } from "@/modules/users/shared/user/types";
 import { LucideIcon } from "lucide-react";
 import { UserService } from "@/modules/users/user-service";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface NavItem {
     label: string;
@@ -17,6 +18,7 @@ interface NavItem {
 
 export default function Sidebar({ userRole }: { userRole: UserRole }) {
     const router = useRouter();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleRoleSwitch = async () => {
         try {
@@ -36,57 +38,63 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
     const navItems: NavItem[] = [
         { label: "Home", href: "/home", icon: Home, role: ["user", "admin"] },
         { label: "History", href: "/history", icon: Inbox, role: ["admin"] },
-        { 
-            label: `Switch to ${userRole === "admin" ? "user" : "admin"}`, 
-            icon: RefreshCw, 
+        {
+            label: `Switch to ${userRole === "admin" ? "user" : "admin"}`,
+            icon: RefreshCw,
             role: ["admin", "user"],
-            onClick: handleRoleSwitch
+            onClick: handleRoleSwitch,
         },
     ];
 
     const filteredNavItems = navItems.filter((item) => item.role.includes(userRole));
 
     return (
-        <aside className="sidebar">
-            <div className="sidebar-header">
-                <h1 className="header-title">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</h1>
-            </div>
+        <>
+            <button className="mobile-menu-button" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                <Menu size={24} />
+            </button>
 
-            <nav className="sidebar-nav">
-                <ul className="nav-list">
-                    {filteredNavItems.map((item, index) => {
-                        const IconComponent = item.icon;
-                        return (
-                            <li key={index} className="nav-item">
-                                {item.onClick ? (
-                                    <button onClick={item.onClick} className="nav-link nav-button">
-                                        <span className="nav-icon">
-                                            <IconComponent size={20} />
-                                        </span>
-                                        <span className="nav-label">{item.label}</span>
-                                    </button>
-                                ) : (
-                                    <a href={item.href} className="nav-link">
-                                        <span className="nav-icon">
-                                            <IconComponent size={20} />
-                                        </span>
-                                        <span className="nav-label">{item.label}</span>
-                                    </a>
-                                )}
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
+            <aside className={`sidebar ${isMobileMenuOpen ? "sidebar-mobile-open" : ""}`}>
+                <div className="sidebar-header">
+                    <h1 className="header-title">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</h1>
+                </div>
 
-            <div className="sidebar-footer">
-                <button onClick={handleLogout} className="nav-link nav-button">
-                    <span className="nav-icon">
-                        <LogOut size={20} />
-                    </span>
-                    <span className="nav-label">Logout</span>
-                </button>
-            </div>
-        </aside>
+                <nav className="sidebar-nav">
+                    <ul className="nav-list">
+                        {filteredNavItems.map((item, index) => {
+                            const IconComponent = item.icon;
+                            return (
+                                <li key={index} className="nav-item">
+                                    {item.onClick ? (
+                                        <button onClick={item.onClick} className="nav-link nav-button">
+                                            <span className="nav-icon">
+                                                <IconComponent size={20} />
+                                            </span>
+                                            <span className="nav-label">{item.label}</span>
+                                        </button>
+                                    ) : (
+                                        <a href={item.href} className="nav-link">
+                                            <span className="nav-icon">
+                                                <IconComponent size={20} />
+                                            </span>
+                                            <span className="nav-label">{item.label}</span>
+                                        </a>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </nav>
+
+                <div className="sidebar-footer">
+                    <button onClick={handleLogout} className="nav-link nav-button">
+                        <span className="nav-icon">
+                            <LogOut size={20} />
+                        </span>
+                        <span className="nav-label">Logout</span>
+                    </button>
+                </div>
+            </aside>
+        </>
     );
 }
