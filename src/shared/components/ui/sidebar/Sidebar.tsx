@@ -3,13 +3,48 @@
 import { Home, Inbox, RefreshCw, LogOut } from "lucide-react";
 import "./sidebar.css";
 import { UserRole } from "@/modules/users/shared/user/types";
+import { LucideIcon } from "lucide-react";
+import { UserService } from "@/modules/users/user-service";
+import { useRouter } from "next/navigation";
+
+interface NavItem {
+    label: string;
+    href?: string;
+    icon: LucideIcon;
+    role: UserRole[];
+    onClick?: () => void;
+}
 
 export default function Sidebar({ userRole }: { userRole: UserRole }) {
-    const navItems = [
-        { label: "Home", href: "/home", icon: Home },
-        { label: "History", href: "/history", icon: Inbox },
-        { label: "Switch to user", href: "#", icon: RefreshCw },
+    const router = useRouter();
+
+    const handleRoleSwitch = async () => {
+        try {
+            const newRole: UserRole = userRole === "admin" ? "user" : "admin";
+            await UserService.fetchAndStoreUser(newRole);
+            window.location.reload();
+        } catch (error) {
+            console.error("Role switch failed:", error);
+        }
+    };
+
+    const handleLogout = () => {
+        UserService.clearUserFromStorage();
+        router.push("/");
+    };
+
+    const navItems: NavItem[] = [
+        { label: "Home", href: "/home", icon: Home, role: ["user", "admin"] },
+        { label: "History", href: "/history", icon: Inbox, role: ["admin"] },
+        { 
+            label: `Switch to ${userRole === "admin" ? "user" : "admin"}`, 
+            icon: RefreshCw, 
+            role: ["admin", "user"],
+            onClick: handleRoleSwitch
+        },
     ];
+
+    const filteredNavItems = navItems.filter((item) => item.role.includes(userRole));
 
     return (
         <aside className="sidebar">
@@ -19,26 +54,38 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
 
             <nav className="sidebar-nav">
                 <ul className="nav-list">
-                    {navItems.map((item, index) => (
-                        <li key={index} className="nav-item">
-                            <a href={item.href} className="nav-link">
-                                <span className="nav-icon">
-                                    <item.icon size={20} />
-                                </span>
-                                <span className="nav-label">{item.label}</span>
-                            </a>
-                        </li>
-                    ))}
+                    {filteredNavItems.map((item, index) => {
+                        const IconComponent = item.icon;
+                        return (
+                            <li key={index} className="nav-item">
+                                {item.onClick ? (
+                                    <button onClick={item.onClick} className="nav-link nav-button">
+                                        <span className="nav-icon">
+                                            <IconComponent size={20} />
+                                        </span>
+                                        <span className="nav-label">{item.label}</span>
+                                    </button>
+                                ) : (
+                                    <a href={item.href} className="nav-link">
+                                        <span className="nav-icon">
+                                            <IconComponent size={20} />
+                                        </span>
+                                        <span className="nav-label">{item.label}</span>
+                                    </a>
+                                )}
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>
 
             <div className="sidebar-footer">
-                <a href="#" className="nav-link">
+                <button onClick={handleLogout} className="nav-link nav-button">
                     <span className="nav-icon">
                         <LogOut size={20} />
                     </span>
                     <span className="nav-label">Logout</span>
-                </a>
+                </button>
             </div>
         </aside>
     );
