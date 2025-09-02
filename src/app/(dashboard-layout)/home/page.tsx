@@ -1,9 +1,11 @@
 import React from "react";
 
-type Props = {};
-
-const Page = (props: Props) => {
-    return <div>Home Page</div>;
+const HomePage = () => {
+    return (
+        <div>
+            <h1>Please try logging in again.</h1>
+        </div>
+    );
 };
 
-export default Page;
+export default HomePage;

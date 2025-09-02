@@ -1,0 +1,39 @@
+.user-home {
+    padding: 1rem;
+}
+
+.concerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: normal;
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.btn-cancel {
+    background: #f44336;
+    color: white;
+}
+
+.btn-reserve {
+    background: #2196F3;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .user-home {
+        padding: 1rem;
+    }
+    
+    .concerts-list {
+        gap: 1rem;
+    }
+}
