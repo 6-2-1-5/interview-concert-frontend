@@ -5,6 +5,7 @@ import { User, Award, CircleX, Trash2 } from "lucide-react";
 import StatCard from "@/modules/concerts/shared/components/StatCard";
 import TabNavigation from "@/modules/concerts/shared/components/TabNavigation";
 import ConcertCard from "@/modules/concerts/shared/components/ConcertCard";
+import CreateConcertForm from "@/modules/concerts/shared/components/CreateConcertForm";
 import { concertService } from "@/modules/concerts/concert-service";
 import "./admin-home.css";
 import { Concert } from "@/modules/concerts/shared/types/concert-entity";
@@ -65,7 +66,13 @@ const AdminHomePage = () => {
         </div>
     );
 
-    const createContent = <div></div>;
+    const createContent = (
+        <CreateConcertForm
+            onSuccess={() => {
+                fetchConcerts(); // refresh concert list
+            }}
+        />
+    );
 
     const tabs = [
         { id: "overview", label: "Overview", content: overviewContent },
