@@ -79,6 +79,13 @@ const UserHomePage = () => {
                                     >
                                         Cancel
                                     </button>
+                                ) : concert.seat - concert.reservedSeat === 0 ? (
+                                    <button
+                                        className="btn btn-full"
+                                        disabled
+                                    >
+                                        Full
+                                    </button>
                                 ) : (
                                     <button
                                         className="btn btn-reserve"
