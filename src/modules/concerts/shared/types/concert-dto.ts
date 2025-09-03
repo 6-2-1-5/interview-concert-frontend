@@ -6,6 +6,7 @@ export interface CreateConcertDto {
     seat: number;
 }
 
-export interface GetConcertWithReservationDto extends Concert {
+export interface GetConcertWithReservationDto extends Omit<Concert, "reservedSeat" | "cancelledSeat"> {
+    isFull: boolean;
     isReserved: boolean;
 }
