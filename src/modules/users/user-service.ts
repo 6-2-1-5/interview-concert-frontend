@@ -1,4 +1,4 @@
-import { User, UserRole } from "./shared/user/types";
+import { User, UserRole } from "./shared/types/user-entity";
 
 const USER_STORAGE_KEY = "user";
 

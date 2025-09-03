@@ -2,7 +2,7 @@
 
 import { Home, Inbox, RefreshCw, LogOut, Menu, X } from "lucide-react";
 import "./sidebar.css";
-import { UserRole } from "@/modules/users/shared/user/types";
+import { UserRole } from "@/modules/users/shared/types/user-entity";
 import { LucideIcon } from "lucide-react";
 import { UserService } from "@/modules/users/user-service";
 import { useRouter } from "next/navigation";

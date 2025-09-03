@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { UserService } from "@/modules/users/user-service";
-import { UserRole } from "@/modules/users/shared/user/types";
+import { UserRole } from "@/modules/users/shared/types/user-entity";
 
 interface HomeLayoutProps {
     children: React.ReactNode;
