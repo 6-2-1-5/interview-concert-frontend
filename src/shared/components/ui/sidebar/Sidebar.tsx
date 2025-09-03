@@ -5,7 +5,7 @@ import "./sidebar.css";
 import { UserRole } from "@/modules/users/shared/types/user-entity";
 import { LucideIcon } from "lucide-react";
 import { UserService } from "@/modules/users/user-service";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
 interface NavItem {
@@ -18,6 +18,7 @@ interface NavItem {
 
 export default function Sidebar({ userRole }: { userRole: UserRole }) {
     const router = useRouter();
+    const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleRoleSwitch = async () => {
@@ -63,6 +64,7 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
                     <ul className="nav-list">
                         {filteredNavItems.map((item, index) => {
                             const IconComponent = item.icon;
+                            const isActive = item.href && pathname === item.href;
                             return (
                                 <li key={index} className="nav-item">
                                     {item.onClick ? (
@@ -73,7 +75,7 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
                                             <span className="nav-label">{item.label}</span>
                                         </button>
                                     ) : (
-                                        <a href={item.href} className="nav-link">
+                                        <a href={item.href} className={`nav-link ${isActive ? "nav-link-active" : ""}`}>
                                             <span className="nav-icon">
                                                 <IconComponent size={20} />
                                             </span>
