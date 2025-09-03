@@ -84,6 +84,9 @@
     font-weight: 500;
     font-size: 0.95rem;
     margin: 0 0 1rem 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .concert-seat {
