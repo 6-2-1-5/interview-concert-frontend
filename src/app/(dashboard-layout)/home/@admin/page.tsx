@@ -1,35 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Award, CircleX, Trash2 } from "lucide-react";
 import StatCard from "@/modules/concerts/shared/components/StatCard";
 import TabNavigation from "@/modules/concerts/shared/components/TabNavigation";
 import ConcertCard from "@/modules/concerts/shared/components/ConcertCard";
+import { concertService } from "@/modules/concerts/concert-service";
 import "./admin-home.css";
-import { Concert } from "@/modules/concerts/shared/concert-types";
+import { Concert } from "@/modules/concerts/shared/types/concert-entity";
 
 const AdminHomePage = () => {
     const [selectedConcertId, setSelectedConcertId] = useState<string | null>(null);
+    const [concerts, setConcerts] = useState<Concert[]>([]);
 
-    const concerts: Concert[] = [
-        {
-            id: "1",
-            name: "Concert Name 1",
-            description: "Pariatur et esse adipisicing in elit in aliqua qui laborum nostrud voluptate pariatur ea cupidatat.",
-            seat: 200,
-            reservedSeat: 110,
-            cancelledSeat: 20,
-        },
-        {
-            id: "2",
-            name: "Concert Name 2",
-            description: "Sit nulla est anim officia commodo nisi occaecat cupidatat aliqua velit ipsum aliquip dolore.",
-            seat: 100,
-            reservedSeat: 11,
-            cancelledSeat: 8,
-        },
-        
-    ];
+    const fetchConcerts = async () => {
+        try {
+            const concertData = await concertService.getAllConcerts();
+            setConcerts(concertData);
+        } catch (err) {
+            console.error("Error fetching concerts:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchConcerts();
+    }, []);
 
     const selectedConcert = selectedConcertId ? concerts.find((c) => c.id === selectedConcertId) : null;
     const totalStats = {
