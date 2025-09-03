@@ -7,12 +7,19 @@ import TabNavigation from "@/modules/concerts/shared/components/TabNavigation";
 import ConcertCard from "@/modules/concerts/shared/components/ConcertCard";
 import CreateConcertForm from "@/modules/concerts/shared/components/CreateConcertForm";
 import { concertService } from "@/modules/concerts/concert-service";
+import { Toasts } from "@/shared/components/ui/toast/Toast";
+import ConfirmDialog from "@/shared/components/ui/dialog/ConfirmDialog";
 import "./admin-home.css";
 import { Concert } from "@/modules/concerts/shared/types/concert-entity";
 
 const AdminHomePage = () => {
     const [selectedConcertId, setSelectedConcertId] = useState<string | null>(null);
     const [concerts, setConcerts] = useState<Concert[]>([]);
+    const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; concertId: string; concertName: string }>({
+        isOpen: false,
+        concertId: "",
+        concertName: "",
+    });
 
     const fetchConcerts = async () => {
         try {
@@ -21,6 +28,29 @@ const AdminHomePage = () => {
         } catch (err) {
             console.error("Error fetching concerts:", err);
         }
+    };
+
+    const handleDeleteClick = (concertId: string, concertName: string) => {
+        setDeleteDialog({ isOpen: true, concertId, concertName });
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            await concertService.removeConcert(deleteDialog.concertId);
+            Toasts.success(`Deleted successfully`);
+            fetchConcerts();
+
+            if (selectedConcertId === deleteDialog.concertId) {
+                setSelectedConcertId(null);
+            }
+        } catch (error) {
+            console.error("Error deleting concert:", error);
+            Toasts.success("Failed to delete concert");
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialog({ isOpen: false, concertId: "", concertName: "" });
     };
 
     useEffect(() => {
@@ -55,7 +85,13 @@ const AdminHomePage = () => {
                             description={concert.description}
                             seat={concert.seat}
                             actions={
-                                <button className="btn btn-danger">
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteClick(concert.id, concert.name);
+                                    }}
+                                >
                                     <Trash2 size={16} /> Delete
                                 </button>
                             }
@@ -90,6 +126,13 @@ const AdminHomePage = () => {
             <div className="admin-content">
                 <TabNavigation tabs={tabs} defaultActiveTab="overview" />
             </div>
+
+            <ConfirmDialog
+                isOpen={deleteDialog.isOpen}
+                onClose={handleDeleteCancel}
+                onConfirm={handleDeleteConfirm}
+                itemName={deleteDialog.concertName}
+            />
         </div>
     );
 };
