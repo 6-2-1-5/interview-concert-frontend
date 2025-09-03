@@ -17,11 +17,16 @@ export class UserService {
     }
 
     static saveUserToStorage(user: User): void {
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+        if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+        }
     }
 
     static getUserFromStorage(): User | null {
         try {
+            if (typeof window === "undefined" || typeof localStorage === "undefined") {
+                return null;
+            }
             const userData = localStorage.getItem(USER_STORAGE_KEY);
             return userData ? JSON.parse(userData) : null;
         } catch (error) {
@@ -31,6 +36,8 @@ export class UserService {
     }
 
     static clearUserFromStorage(): void {
-        localStorage.removeItem(USER_STORAGE_KEY);
+        if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+            localStorage.removeItem(USER_STORAGE_KEY);
+        }
     }
 }

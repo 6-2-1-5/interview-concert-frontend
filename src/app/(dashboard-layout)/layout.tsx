@@ -1,22 +1,26 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Sidebar from "@/shared/components/ui/sidebar/Sidebar";
 import "./dashboard.css";
 import { UserService } from "@/modules/users/user-service";
+import { UserRole } from "@/modules/users/shared/user/types";
 
 interface DashboardLayoutProps {
     children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-    const userRole = UserService.getUserFromStorage()?.role;
+    const [userRole, setUserRole] = useState<UserRole | null>(null);
 
     useEffect(() => {
-        if (!userRole) {
+        const user = UserService.getUserFromStorage();
+        const role = user?.role || null;
+        setUserRole(role);
+        if (!role) {
             UserService.clearUserFromStorage();
         }
-    }, [userRole]);
+    }, []);
 
     if (!userRole) {
         return null;

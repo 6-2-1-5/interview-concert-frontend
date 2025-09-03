@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserService } from "@/modules/users/user-service";
+import { UserRole } from "@/modules/users/shared/user/types";
 
 interface HomeLayoutProps {
     children: React.ReactNode;
@@ -10,11 +11,16 @@ interface HomeLayoutProps {
 }
 
 export default function HomeLayout({ children, admin, user }: HomeLayoutProps) {
-    // In a real-world application, we should verify the token by calling an API since this is a sensitive part
-    // However, we did not implement authentication and tokens as they were not included in the requirements
-    const currentUser = UserService.getUserFromStorage();
-    const userRole = currentUser?.role;
+    const [userRole, setUserRole] = useState<UserRole | null>(null);
 
+    useEffect(() => {
+        // In a real-world application, we should verify the token by calling an API since this is a sensitive part
+        // However, we did not implement authentication and tokens as they were not included in the requirements
+        const currentUser = UserService.getUserFromStorage();
+        const role = currentUser?.role || null;
+        setUserRole(role);
+    }, []);
+    
     if (userRole === "admin") {
         return admin;
     } else if (userRole === "user") {
