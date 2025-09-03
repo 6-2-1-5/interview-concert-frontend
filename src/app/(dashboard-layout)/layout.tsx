@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import Sidebar from "@/shared/components/ui/sidebar/Sidebar";
 import "./dashboard.css";
 import { UserService } from "@/modules/users/user-service";
-import { UserRole } from "@/modules/users/shared/user/types";
+import { UserRole } from "@/modules/users/shared/types/user-entity";
 
 interface DashboardLayoutProps {
     children: ReactNode;
