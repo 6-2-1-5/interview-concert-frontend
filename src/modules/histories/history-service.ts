@@ -1,4 +1,4 @@
-import { fetchHistoryList } from "./shared/history-api";
+import { fetchHistoryList, fetchMyHistoryList } from "./shared/history-api";
 import { RelationHistoryDto } from "./shared/types/history-dto";
 
 export class HistoryService {
@@ -8,6 +8,15 @@ export class HistoryService {
         } catch (error) {
             console.error("Error fetching history:", error);
             throw new Error("Failed to load history");
+        }
+    }
+
+    async getMyHistory(): Promise<RelationHistoryDto[]> {
+        try {
+            return await fetchMyHistoryList();
+        } catch (error) {
+            console.error("Error fetching my history:", error);
+            throw new Error("Failed to load my history");
         }
     }
 }

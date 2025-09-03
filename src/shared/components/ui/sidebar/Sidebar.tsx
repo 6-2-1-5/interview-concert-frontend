@@ -38,7 +38,7 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
 
     const navItems: NavItem[] = [
         { label: "Home", href: "/home", icon: Home, role: ["user", "admin"] },
-        { label: "History", href: "/history", icon: Inbox, role: ["admin"] },
+        { label: "History", href: "/history", icon: Inbox, role: ["user", "admin"] },
         {
             label: `Switch to ${userRole === "admin" ? "user" : "admin"}`,
             icon: RefreshCw,
